@@ -9,7 +9,7 @@ import datetime
 APP_KEY = ''
 
 #输入城市名称
-city = input('输入你的城市（必须英文）')
+city_name = input('输入你的城市（必须英文）')
 
 #请求API
 def url_builder_name(city_name):
@@ -19,7 +19,7 @@ def url_builder_name(city_name):
     res = requests.get(url)
     return json.loads(res.text)
 
-a = url_builder_name(city)
+weather_value = url_builder_name(city_name)
 
 #时间格式转换
 def time_converter(time):
@@ -29,7 +29,7 @@ def time_converter(time):
     return converted_time
 
 #风速，参考https://baike.baidu.com/item/%E9%A3%8E%E9%80%9F/75302?fr=aladdin
-wind = a.get('wind')['speed']
+wind = weather_value.get('wind')['speed']
 if wind>0.0 and wind<0.2:
     wind = 0
 elif wind>=0.2 and wind<1.5:
@@ -58,7 +58,7 @@ elif wind>=32.6 and wind<36.9:
     wind = 12
 
 #风向，参考https://baike.baidu.com/item/%E9%A3%8E%E5%90%91/4869036?fr=aladdin
-wind_deg = a.get('wind')['deg']
+wind_deg = weather_value.get('wind')['deg']
 if wind_deg>22.5 and wind_deg<=67.5:
     wind_deg = '东北风'
 elif wind_deg>67.5 and wind_deg<=112.5:
@@ -77,23 +77,23 @@ elif wind_deg>337.5 and wind_deg<=360 or wind_deg>0 and wind_deg<=22.5:
     wind_deg = '北风'
 
 #提取数据，构建字典
-def data_organizer(a):
+def data_organizer(weather_value):
     data = {
-        'city': a.get('name'),
-        'country': a.get('sys')['country'],
-        'temp': a.get('main')['temp'],
-        'temp_max': a.get('main')['temp_max'],
-        'temp_min': a.get('main')['temp_min'],
-        'humidity': a.get('main')['humidity'],
-        'pressure': a.get('main')['pressure'],
-        'sky': a.get('weather')[0]['main'],
-        'sunrise': time_converter(a.get('sys')['sunrise']),
-        'sunset': time_converter(a.get('sys')['sunset']),
+        'city': weather_value.get('name'),
+        'country': weather_value.get('sys')['country'],
+        'temp': weather_value.get('main')['temp'],
+        'temp_max': weather_value.get('main')['temp_max'],
+        'temp_min': weather_value.get('main')['temp_min'],
+        'humidity': weather_value.get('main')['humidity'],
+        'pressure': weather_value.get('main')['pressure'],
+        'sky': weather_value.get('weather')[0]['main'],
+        'sunrise': time_converter(weather_value.get('sys')['sunrise']),
+        'sunset': time_converter(weather_value.get('sys')['sunset']),
         'wind': wind,
         'wind_deg': wind_deg,
-        'dt': time_converter(a.get('dt')),
-        'cloudiness': a.get('clouds')['all'],
-        'description': a.get('weather')[0]['description']
+        'dt': time_converter(weather_value.get('dt')),
+        'cloudiness': weather_value.get('clouds')['all'],
+        'description': weather_value.get('weather')[0]['description']
     }
     return data
 
@@ -112,6 +112,6 @@ def data_output():
     
     最后更新时间: {dt}
 ------------------------------------------------'''
-    return s.format(**data_organizer(a))
+    return s.format(**data_organizer(weather_value))
 
 print(data_output())
