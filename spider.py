@@ -5,7 +5,7 @@ import requests
 import json
 import datetime
 
-#必填API，请自行申请，http://openweathermap.org/
+#必填API KEY，请自行申请，http://openweathermap.org/
 APP_KEY = ''
 
 #输入城市名称
