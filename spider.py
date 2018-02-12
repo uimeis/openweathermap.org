@@ -6,7 +6,7 @@ import json
 import datetime
 
 #必填API，请自行申请，http://openweathermap.org/
-APP_KEY = 'c3536e2704814e9e4eff7a453ffb5c5f'
+APP_KEY = ''
 
 #输入城市名称
 city = input('输入你的城市（必须英文）')
